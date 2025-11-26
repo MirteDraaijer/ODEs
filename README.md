@@ -12,6 +12,19 @@ Specifiekere taken casus B:
 - Data vinden of willen we de gegeven data gebruiken?
 
 ---
+## Auteurs:
+- Ivar Lottman
+- Mirte Draaijer
+
+# Beschrijving:
+
+# Systeem vereisten:
+
+# Gebruik:
+
+## Gedetailleerde handleiding:
+
+In het bestand `hele_mooie_bestandsnaam.ipynb` is een uitgebreide handleiding te vinden van hoe deze module in zijn werk gaat aan de hand van een voorbeeld.
 
 # Achtergrondinformatie:
 Wiskundige modellen, waaronder ordinary differential equations (ODEs), worden gebruikt om tumor groei te simuleren en behandeling van kanker te bestuderen (Chan et al., 2023). Er zijn verschillende differentiaal vergelijkingen die hiervoor gebruikt kunnen worden. Verderop volgt een kort overzicht van een aantal verschillende differentiaal vergelijkingen die gebruikt kunnen worden om tumor groei te simuleren.
