@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import vergelijkingen as mt
 
 class ode_solver:
     def __init__(self, volume, n, delta_t):
@@ -9,9 +10,28 @@ class ode_solver:
 
     def __str__(self):
         return f'Start volume: {self.volume}, aantal dagen: {self.n}, stapgrootte: {self.delta_t}'
+    
+    def lineair_example(volume,c):
+        result = volume*c
+        return result
 
-    def lineair(self):
-        pass
+    def ode_looper(self,c):
+        dagen = []
+        volumes = []
+        t = 0
+        for i in range(self.n):
+            if i == 0:
+                t += self.delta_t
+                delta_volume = mt.lineair(self.volume, c, self.delta_t)
+                dagen.append(t)
+                volumes.append(delta_volume)
+            else:
+                t += self.delta_t
+                delta_volume = mt.lineair(volumes[i-1], c, self.delta_t)
+                dagen.append(t)
+                volumes.append(delta_volume)
+
+        return dagen, volumes
 
     def exponentieel_toenemend(self, c):
         dagen = []
