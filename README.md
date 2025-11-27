@@ -46,7 +46,7 @@ In het exponentiele model is de groei proportioneel aan de tumor-grootte. Hierbi
 De formule voor exponentieel afvlakkende groei is:
 
 $$
-\frac{\text{d}V}{\text{d}t} = c \,( V_{\max} - V)
+\frac{\text{d}V}{\text{d}t} = c \cdot( V_{\max} - V)
 $$
 
 Deze formule is een variant op de 'normale' exponentiele groei, deze versie heeft een maximaal volume wat de tumor kan bereiken, dit is iets wat de 'normale' exponentiele formule niet heeft. Hierbij is $c$ de groeifactor, $V_{max}$ is het maximale volume dat de tumor kan krijgen en $V$ is het volume van de tumor op een gegeven moment. 
@@ -57,7 +57,7 @@ Deze formule is een variant op de 'normale' exponentiele groei, deze versie heef
 De formule voor Montroll groei is:
 
 $$
-\frac{\text{d}V}{\text{d}t} = c \, V \, \left( V_{\max}^d - V^d \right)
+\frac{\text{d}V}{\text{d}t} = c \cdot V \cdot \left( V_{\max}^d - V^d \right)
 $$
 
 Dit model gaat uit van continue groei, maar in een echt systeem groeit de tumor niet elke dag even snel. Hierbij is $c$ de groeifactor, $V$ is het volume van de tumor op een gegeven moment, $V_{\max}^d$ is de maximale groeiruimte die beschikbaar is, waarbij $d$ bepaalt hoe sterk de remming en $V^d$ is hoeveel van de groeiruimte al is gebruikt (Rodrigues, 2024).
