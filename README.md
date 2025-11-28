@@ -30,6 +30,13 @@ In het bestand `hele_mooie_bestandsnaam.ipynb` is een uitgebreide handleiding te
 Wiskundige modellen, waaronder ordinary differential equations (ODEs), worden gebruikt om tumor groei te simuleren en behandeling van kanker te bestuderen (Chan et al., 2023). Er zijn verschillende differentiaal vergelijkingen die hiervoor gebruikt kunnen worden. Verderop volgt een kort overzicht van een aantal verschillende differentiaal vergelijkingen die gebruikt kunnen worden om tumor groei te simuleren.
 
 ## Lineaire groei:
+De formule voor lineaire groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c
+$$
+
+In het liniare model is word de volume $V$ bepaald door de groeifactor $c$ over tijd.
 
 ## Exponentieel toenemende groei:
 De formule voor de exponentieel toenemende groei is:
@@ -41,6 +48,12 @@ $$
 In het exponentiele model is de groei proportioneel aan de tumor-grootte. Hierbij is $c$ de groeifactor en $V$ is het volume van de tumor op  een gegeven moment. Dit model werkt goed voor het voorspellen van tumorgroei in vroege stadia (Hassan & Al-Saedi, 2024).
 
 ## Mendelsohn groei:
+De formule voor Mendelsohn groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c \cdot V^d
+$$
+
 
 ## Exponentieel afvlakkende groei:
 De formule voor exponentieel afvlakkende groei is:
@@ -52,6 +65,11 @@ $$
 Deze formule is een variant op de 'normale' exponentiele groei, deze versie heeft een maximaal volume wat de tumor kan bereiken, dit is iets wat de 'normale' exponentiele formule niet heeft. Hierbij is $c$ de groeifactor, $V_{max}$ is het maximale volume dat de tumor kan krijgen en $V$ is het volume van de tumor op een gegeven moment. 
 
 ## Logistische groei:
+De formule voor logistische groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c \cdot V \cdot \left( V_\max - V \right)
+$$
 
 ## Montroll groei:
 De formule voor Montroll groei is:
@@ -63,6 +81,11 @@ $$
 Dit model gaat uit van continue groei, maar in een echt systeem groeit de tumor niet elke dag even snel. Hierbij is $c$ de groeifactor, $V$ is het volume van de tumor op een gegeven moment, $V_{\max}^d$ is de maximale groeiruimte die beschikbaar is, waarbij $d$ bepaalt hoe sterk de remming en $V^d$ is hoeveel van de groeiruimte al is gebruikt (Rodrigues, 2024).
 
 ## Allee effect groei:
+De formule voor Allee effect groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c \cdot \left( V - V_\min \right) \cdot \left( V_\max - V \right)
+$$
 
 ## Lineair gelimiteerde groei:
 De formule voor lineair gelimiteerde groei is:
@@ -74,6 +97,12 @@ $$
 Deze formule is een variant op de 'normale' lineaire groei, deze versie heeft een maximum snelheid waarmee de tumor kan groeien, dit is iets wat de 'normale' formule niet heeft. Hierbij is $c$ de groeifactor, $V$ is het huidige volume van de tumor en $V + d$ voegt een constante toe waardoor de snelheid waarmee de tumor kan groeien beperkt wordt.
 
 ## Oppervlakte gelimiteerde groei:
+De formule voor Oppervlakte gelimiteerde groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c \cdot \frac{V}{\left( V + d \right)^\frac{1}{3}}
+$$
+
 
 ## Von Bertalanffy groei:
 De formule voor Von Bertalanffy groei is:
@@ -85,6 +114,11 @@ $$
 Dit model impliceert dat het volume van de tumor afneemt met celldood en dat groei toeneemt proportioneel aan het oppervlakte. Hierbij is $c$ de groeifactor, $V^\frac{2}{3}$ beschrijft de starttoestand en $-d \cdot V$ zorgt voor een afname in volume. Als er een populatie wordt beschreven kunnen $V^\frac{2}{3}$ en $-d \cdot V$ ook gezien worden als de geboorte- en sterftecijfers, maar dat is niet hoe tumoren te werk gaan (Hassan & Al-Saedi, 2024).
 
 ## Gompertz groei:
+De formule voor Gompertz groei is:
+
+$$
+\frac{\text{d}V}{\text{d}t} = c \cdot V \cdot \ln \left( \frac{V_\max}{V} \right)
+$$
 
 # Bronvermelding:
 - Chan, K., Kao, C., Gordinier, J., & Ganden, K. (2023). Treatment Optimization for Tumor Growth by Ordinary Differential Equations. Journal Of Student Research, 12(4). https://doi.org/10.47611/jsrhs.v12i4.5202
