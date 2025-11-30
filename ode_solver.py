@@ -1,6 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 import vergelijkingen as mt
+import random
 
 class ode_solver:
     def __init__(self, volume, n, delta_t):
@@ -11,10 +12,12 @@ class ode_solver:
     def __str__(self):
         return f'Start volume: {self.volume}, aantal dagen: {self.n}, stapgrootte: {self.delta_t}'
     
-    def lineair_example(volume,c):
-        result = volume*c
-        return result
+    def lineair_example(self,c):
+        def model():
+            return self.volume + (c*self.delta_t)
+        return self.solver(model())
 
+    @DeprecationWarning
     def ode_looper(self,c):
         dagen = []
         volumes = []
@@ -47,49 +50,84 @@ class ode_solver:
             volumes.append(self.volume)
         return dagen, volumes
 
-    def lineair(self):
-        pass
+    def lineair(self,c):
+        def model():
+            return self.volume + (c*self.delta_t)
+        return self.solver(model)
 
     def exponentieel_toenemend(self, c):
         def model():
             return c * self.volume * self.delta_t
         return self.solver(model)
 
-    def mendelsohn(self):
-        pass
+    @DeprecationWarning
+    def mendelsohn_testmodel(self,c):
+        dagen = []
+        volumes = []
+        t = self.delta_t
+        for i in range(n):
+            if i == 0:
+                t += self.delta_t
+                delta_volume = mt.mendelsohn(self.volume, c, self.delta_t)
+                dagen.append(t)
+                volumes.append(delta_volume)
+            else:
+                t += self.delta_t
+                delta_volume = mt.mendelsohn(volumes[i-1], c, self.delta_t)
+                dagen.append(t)
+                volumes.append(delta_volume)
+
+        return dagen,volumes
+
+    def mendelsohn(self,c,d):
+        def model():
+            return c*(self.volume^d)*self.delta_t
+        return self.solver(model())
+
 
     def exponentieel_afvlakkend(self, c, max_volume):
         def model():
             return c * (max_volume - self.volume) * self.delta_t
         return self.solver(model)
         
-    def logistisch(self):
-        pass
+    def logistisch(self,c,max_volume):
+        def model():
+            return c*self.volume*(max_volume-self.volume)*self.delta_t
+
+        return self.solver(model)
 
     def montroll(self, c, d, max_volume):
         def model():
             return c * self.volume * (math.pow(max_volume, d) - math.pow(self.volume, d)) * self.delta_t
         return self.solver(model)
 
-    def allee(self):
-        pass
-
+    def allee(self, c, min_volume, max_volume):
+        def model():
+            return c*(self.volume-min_volume) * (max_volume-self.volume)*self.delta_t
+        return self.solver(model)
+    
     def lineair_gelimiteerd(self, c, d):
         def model():
             return c * (self.volume / (self.volume + d)) * self.delta_t
         return self.solver(model)
 
-    def oppervlakte_gelimiteerd(self):
-        pass
+    def oppervlakte_gelimiteerd(self,c,d):
+        def model():
+            return c*((self.volume+d)/3)*self.delta_t
+        return self.solver(model)
 
     def von_bertalanffy(self, c, d):
         def model():
             return (c * math.pow(self.volume, 2/3) - d * self.volume) * self.delta_t
         return self.solver(model)
 
-    def gompertz(self):
-        pass
-
+    def gompertz(self,c,volume_max):
+        def model():
+            log_calc = math.log((volume_max/self.volume))
+            result = c*self.volume*log_calc*self.delta_t
+            return result
+        return self.solver(model)
+    
     def runge_kutta(self, a, b):
         def ODE(t, y):
             return a * y + b
@@ -115,6 +153,32 @@ class ode_solver:
             dagen.append(t)
             volumes.append(y)
         return dagen, volumes
+    
+    def fit(self,echte_volumes):
+        params = {"a": 0.0,"b":0.0}
+        
+        def MSE_calc(echte_vol,a,b):
+            squared_sum = 0.0
+            dagen, predicted = self.runge_kutta(a,b)
+            for echte_vol, predicted_vol in zip(echte_vol,predicted):
+                error = echte_vol-predicted_vol
+                squared_sum += (error*error)
+            result = squared_sum/len(predicted)
+            return result
+        
+        mse = MSE_calc(echte_volumes, **params)
+        attempts = 0
+        while attempts < 10000:
+            attempts += 1
+            new_params = {key: val + random.gauss(sigma=0.1) for key , val in params.items()}
+            new_mse = MSE_calc(echte_volumes,**new_params)
+            if new_mse<mse:
+                params = new_params
+                mse = new_mse
+                attempts = 0
+
+
+        return params
  
     def plot(self, dagen, volumes, label):
         plt.plot(dagen, volumes, label = label)
