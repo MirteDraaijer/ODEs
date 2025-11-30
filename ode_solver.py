@@ -33,97 +33,88 @@ class ode_solver:
 
         return dagen, volumes
 
-    def exponentieel_toenemend(self, c):
+    def solver(self, model):
         dagen = []
         volumes = []
         t = 0
 
         for i in range(self.n):
-            t = t + self.delta_t
-            delta_volume = c * self.volume * self.delta_t
-            self.volume = self.volume + delta_volume
+            t += self.delta_t
+            delta_volume = model()
+            self.volume += delta_volume
 
             dagen.append(t)
             volumes.append(self.volume)
-        
         return dagen, volumes
+
+    def lineair(self):
+        pass
+
+    def exponentieel_toenemend(self, c):
+        def model():
+            return c * self.volume * self.delta_t
+        return self.solver(model)
 
     def mendelsohn(self):
         pass
 
     def exponentieel_afvlakkend(self, c, max_volume):
-        dagen = []
-        volumes = []
-        t = 0
-
-        for i in range(self.n):
-            t = t + self.delta_t
-            delta_volume = c * (max_volume - self.volume) * self.delta_t
-            self.volume = self.volume + delta_volume
-
-            dagen.append(t)
-            volumes.append(self.volume)
-
-        return dagen, volumes
+        def model():
+            return c * (max_volume - self.volume) * self.delta_t
+        return self.solver(model)
         
-
     def logistisch(self):
         pass
 
     def montroll(self, c, d, max_volume):
-        dagen = []
-        volumes = []
-        t = 0
-
-        for i in range(self.n):
-            t = t + self.delta_t
-            delta_volume = c * self.volume * (math.pow(max_volume, d) - math.pow(self.volume, d)) * self.delta_t
-            self.volume = self.volume + delta_volume
-
-            dagen.append(t)
-            volumes.append(self.volume)
-
-        return dagen, volumes
+        def model():
+            return c * self.volume * (math.pow(max_volume, d) - math.pow(self.volume, d)) * self.delta_t
+        return self.solver(model)
 
     def allee(self):
         pass
 
     def lineair_gelimiteerd(self, c, d):
-        dagen = []
-        volumes = []
-        t = 0
-
-        for i in range(self.n):
-            t = t + self.delta_t
-            delta_volume = c * (self.volume / (self.volume + d)) * self.delta_t
-            self.volume = self.volume + delta_volume
-
-            dagen.append(t)
-            volumes.append(self.volume)
-
-        return dagen, volumes
+        def model():
+            return c * (self.volume / (self.volume + d)) * self.delta_t
+        return self.solver(model)
 
     def oppervlakte_gelimiteerd(self):
         pass
 
     def von_bertalanffy(self, c, d):
-        dagen = []
-        volumes = []
-        t = 0
-
-        for i in range(self.n):
-            t = t + self.delta_t
-            delta_volume = c * math.pow(self.volume, 2/3) - d * self.volume * self.delta_t
-            self.volume = self.volume + delta_volume
-
-            dagen.append(t)
-            volumes.append(self.volume)
-
-        return dagen, volumes
+        def model():
+            return (c * math.pow(self.volume, 2/3) - d * self.volume) * self.delta_t
+        return self.solver(model)
 
     def gompertz(self):
         pass
-    
-    def plot(self, dagen, volumes):
-        plt.plot(dagen, volumes)
-        plt.show
+
+    def runge_kutta(self, a, b):
+        def ODE(t, y):
+            return a * y + b
+        t = 0.0
+        y = self.volume
+        dagen = [t]
+        volumes = [y]
+
+        for i in range (self.n):
+            dydt1 = ODE(t, y)
+            y1 = y + 0.5 * dydt1 * self.delta_t
+
+            dydt2 = ODE(t, y1)
+            y2 = y + 0.5 * dydt2 * self.delta_t
+
+            dydt3 = ODE(t, y2)
+            y3 = y + dydt2 * self.delta_t
+
+            dydt4 = ODE(t, y3)
+            t = t + self.delta_t
+            y = y + (dydt1 + 2.0 * dydt2 + 2.0 * dydt3 + dydt4) / 6.0 * self.delta_t
+
+            dagen.append(t)
+            volumes.append(y)
+        return dagen, volumes
+ 
+    def plot(self, dagen, volumes, label):
+        plt.plot(dagen, volumes, label = label)
