@@ -1,6 +1,5 @@
 import math
 import matplotlib.pyplot as plt
-# import vergelijkingen as mt
 import random
 
 class ode_solver:
@@ -37,28 +36,28 @@ class ode_solver:
     #     return dagen, volumes
 
     def solver(self, model):
-        dagen = []
-        volumes = []
         t = 0
         volume = self.volume
+        dagen = [t]
+        volumes = [volume]
 
         for i in range(self.n):
             t += self.delta_t
-            delta_volume = model()
+            delta_volume = model(volume)
             volume += delta_volume
 
             dagen.append(t)
             volumes.append(volume)
         return dagen, volumes
 
-    def lineair(self,c):
-        def model():
-            return self.volume + (c*self.delta_t)
+    def lineair(self, startvol, n, dt, c):
+        def model(volume):
+            return volume + (c * dt)
         return self.solver(model)
 
-    def exponentieel_toenemend(self, c):
-        def model():
-            return c * self.volume * self.delta_t
+    def exponentieel_toenemend(self, startvol, n, dt, c):
+        def model(volume):
+            return c * volume * dt
         return self.solver(model)
 
     # @DeprecationWarning
@@ -80,52 +79,52 @@ class ode_solver:
 
     #     return dagen,volumes
 
-    def mendelsohn(self,c,d):
-        def model():
-            return c*(self.volume^d)*self.delta_t
+    def mendelsohn(self, startvol, n, dt, c, d):
+        def model(volume):
+            return c * (volume ^ d) * dt
         return self.solver(model())
 
 
-    def exponentieel_afvlakkend(self, c, max_volume):
-        def model():
-            return c * (max_volume - self.volume) * self.delta_t
+    def exponentieel_afvlakkend(self, startvol, n, dt, c, max_volume):
+        def model(volume):
+            return c * (max_volume - volume) * dt
         return self.solver(model)
         
-    def logistisch(self,c,max_volume):
-        def model():
-            return c*self.volume*(max_volume-self.volume)*self.delta_t
+    def logistisch(self, startvol, n, dt, c,max_volume):
+        def model(volume):
+            return c * volume * (max_volume - volume) * dt
 
         return self.solver(model)
 
-    def montroll(self, c, d, max_volume):
-        def model():
-            return c * self.volume * (math.pow(max_volume, d) - math.pow(self.volume, d)) * self.delta_t
+    def montroll(self, startvol, n, dt, c, d, max_volume):
+        def model(volume):
+            return c * volume * (math.pow(max_volume, d) - math.pow(volume, d)) * dt
         return self.solver(model)
 
-    def allee(self, c, min_volume, max_volume):
-        def model():
-            return c*(self.volume-min_volume) * (max_volume-self.volume)*self.delta_t
+    def allee(self, startvol, n, dt, c, min_volume, max_volume):
+        def model(volume):
+            return c * (volume - min_volume) * (max_volume - volume) * dt
         return self.solver(model)
     
-    def lineair_gelimiteerd(self, c, d):
-        def model():
-            return c * (self.volume / (self.volume + d)) * self.delta_t
+    def lineair_gelimiteerd(self, startvol, n, dt, c, d):
+        def model(volume):
+            return c * (volume / (volume + d)) * dt
         return self.solver(model)
 
-    def oppervlakte_gelimiteerd(self,c,d):
-        def model():
-            return c*((self.volume+d)/3)*self.delta_t
+    def oppervlakte_gelimiteerd(self, startvol, n, dt, c, d):
+        def model(volume):
+            return c * ((volume + d) / 3) * dt
         return self.solver(model)
 
-    def von_bertalanffy(self, c, d):
-        def model():
-            return (c * math.pow(self.volume, 2/3) - d * self.volume) * self.delta_t
+    def von_bertalanffy(self, startvol, n, dt, c, d):
+        def model(volume):
+            return (c * math.pow(volume, 2/3) - d * volume) * dt
         return self.solver(model)
 
-    def gompertz(self,c,volume_max):
-        def model():
-            log_calc = math.log((volume_max/self.volume))
-            result = c*self.volume*log_calc*self.delta_t
+    def gompertz(self, startvol, n, dt, c, volume_max):
+        def model(volume):
+            log_calc = math.log((volume_max / volume))
+            result = c * volume * log_calc * dt
             return result
         return self.solver(model)
     
