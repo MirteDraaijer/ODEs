@@ -1,6 +1,6 @@
 import math
 import matplotlib.pyplot as plt
-import vergelijkingen as mt
+# import vergelijkingen as mt
 import random
 
 class ode_solver:
@@ -17,24 +17,24 @@ class ode_solver:
             return self.volume + (c*self.delta_t)
         return self.solver(model())
 
-    @DeprecationWarning
-    def ode_looper(self,c):
-        dagen = []
-        volumes = []
-        t = 0
-        for i in range(self.n):
-            if i == 0:
-                t += self.delta_t
-                delta_volume = mt.lineair(self.volume, c, self.delta_t)
-                dagen.append(t)
-                volumes.append(delta_volume)
-            else:
-                t += self.delta_t
-                delta_volume = mt.lineair(volumes[i-1], c, self.delta_t)
-                dagen.append(t)
-                volumes.append(delta_volume)
+    # @DeprecationWarning
+    # def ode_looper(self,c):
+    #     dagen = []
+    #     volumes = []
+    #     t = 0
+    #     for i in range(self.n):
+    #         if i == 0:
+    #             t += self.delta_t
+    #             delta_volume = mt.lineair(self.volume, c, self.delta_t)
+    #             dagen.append(t)
+    #             volumes.append(delta_volume)
+    #         else:
+    #             t += self.delta_t
+    #             delta_volume = mt.lineair(volumes[i-1], c, self.delta_t)
+    #             dagen.append(t)
+    #             volumes.append(delta_volume)
 
-        return dagen, volumes
+    #     return dagen, volumes
 
     def solver(self, model):
         dagen = []
@@ -60,24 +60,24 @@ class ode_solver:
             return c * self.volume * self.delta_t
         return self.solver(model)
 
-    @DeprecationWarning
-    def mendelsohn_testmodel(self,c):
-        dagen = []
-        volumes = []
-        t = self.delta_t
-        for i in range(self.n):
-            if i == 0:
-                t += self.delta_t
-                delta_volume = mt.mendelsohn(self.volume, c, self.delta_t)
-                dagen.append(t)
-                volumes.append(delta_volume)
-            else:
-                t += self.delta_t
-                delta_volume = mt.mendelsohn(volumes[i-1], c, self.delta_t)
-                dagen.append(t)
-                volumes.append(delta_volume)
+    # @DeprecationWarning
+    # def mendelsohn_testmodel(self,c):
+    #     dagen = []
+    #     volumes = []
+    #     t = self.delta_t
+    #     for i in range(self.n):
+    #         if i == 0:
+    #             t += self.delta_t
+    #             delta_volume = mt.mendelsohn(self.volume, c, self.delta_t)
+    #             dagen.append(t)
+    #             volumes.append(delta_volume)
+    #         else:
+    #             t += self.delta_t
+    #             delta_volume = mt.mendelsohn(volumes[i-1], c, self.delta_t)
+    #             dagen.append(t)
+    #             volumes.append(delta_volume)
 
-        return dagen,volumes
+    #     return dagen,volumes
 
     def mendelsohn(self,c,d):
         def model():
@@ -154,12 +154,12 @@ class ode_solver:
             volumes.append(y)
         return dagen, volumes
     
-    def fit(self,echte_volumes):
-        params = {"a": 0.0,"b":0.0}
+    def fit(self,echte_volumes,model):
+        params = {"a": 0.0,"b":0.0,"c":0.0}
         
-        def MSE_calc(echte_vol,a,b):
+        def MSE_calc(echte_vol,a,b,c):
             squared_sum = 0.0
-            dagen, predicted = self.runge_kutta(a,b)
+            dagen, predicted = self.exponentieel_toenemend(c)
             for echte_vol, predicted_vol in zip(echte_vol,predicted):
                 error = echte_vol-predicted_vol
                 squared_sum += (error*error)
