@@ -154,12 +154,12 @@ class ode_solver:
             volumes.append(y)
         return dagen, volumes
     
-    def fit(self,echte_volumes,model):
+    def fit(self, echte_volumes, model,c):
         params = {"a": 0.0,"b":0.0,"c":0.0}
         
         def MSE_calc(echte_vol,a,b,c):
             squared_sum = 0.0
-            dagen, predicted = self.exponentieel_toenemend(c)
+            dagen, predicted = model(c)
             for echte_vol, predicted_vol in zip(echte_vol,predicted):
                 error = echte_vol-predicted_vol
                 squared_sum += (error*error)
