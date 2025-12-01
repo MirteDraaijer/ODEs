@@ -40,14 +40,15 @@ class ode_solver:
         dagen = []
         volumes = []
         t = 0
+        volume = self.volume
 
         for i in range(self.n):
             t += self.delta_t
             delta_volume = model()
-            self.volume += delta_volume
+            volume += delta_volume
 
             dagen.append(t)
-            volumes.append(self.volume)
+            volumes.append(volume)
         return dagen, volumes
 
     def lineair(self,c):
@@ -154,12 +155,12 @@ class ode_solver:
             volumes.append(y)
         return dagen, volumes
     
-    def fit(self, echte_volumes, model,c):
-        params = {"a": 0.0,"b":0.0,"c":0.0}
+    def fit(self, echte_volumes, model, params0):
+        params = params0.copy()
         
-        def MSE_calc(echte_vol,a,b,c):
+        def MSE_calc(echte_vol, **params):
             squared_sum = 0.0
-            dagen, predicted = model(c)
+            dagen, predicted = model(**params)
             for echte_vol, predicted_vol in zip(echte_vol,predicted):
                 error = echte_vol-predicted_vol
                 squared_sum += (error*error)
@@ -182,3 +183,4 @@ class ode_solver:
  
     def plot(self, dagen, volumes, label):
         plt.plot(dagen, volumes, label = label)
+        
