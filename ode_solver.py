@@ -65,7 +65,7 @@ class ode_solver:
         dagen = []
         volumes = []
         t = self.delta_t
-        for i in range(n):
+        for i in range(self.n):
             if i == 0:
                 t += self.delta_t
                 delta_volume = mt.mendelsohn(self.volume, c, self.delta_t)
