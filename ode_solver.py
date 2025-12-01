@@ -50,14 +50,14 @@ class ode_solver:
             volumes.append(volume)
         return dagen, volumes
 
-    def lineair(self, startvol, n, dt, c):
+    def lineair(self, c):
         def model(volume):
-            return volume + (c * dt)
+            return volume + (c * self.delta_t)
         return self.solver(model)
 
-    def exponentieel_toenemend(self, startvol, n, dt, c):
+    def exponentieel_toenemend(self, c):
         def model(volume):
-            return c * volume * dt
+            return c * volume * self.delta_t
         return self.solver(model)
 
     # @DeprecationWarning
@@ -79,52 +79,56 @@ class ode_solver:
 
     #     return dagen,volumes
 
-    def mendelsohn(self, startvol, n, dt, c, d):
+    def mendelsohn(self, c, d):
         def model(volume):
-            return c * (volume ^ d) * dt
-        return self.solver(model())
+            return c * math.pow(volume, d) * self.delta_t
+        return self.solver(model)
 
-
-    def exponentieel_afvlakkend(self, startvol, n, dt, c, max_volume):
+    def exponentieel_afvlakkend(self, c, max_volume):
         def model(volume):
-            return c * (max_volume - volume) * dt
+            return c * (max_volume - volume) * self.delta_t
         return self.solver(model)
         
-    def logistisch(self, startvol, n, dt, c,max_volume):
+    def logistisch(self, c,max_volume):
         def model(volume):
-            return c * volume * (max_volume - volume) * dt
+            return c * volume * (max_volume - volume) * self.delta_t
 
         return self.solver(model)
 
-    def montroll(self, startvol, n, dt, c, d, max_volume):
+    def montroll(self, c, d, max_volume):
         def model(volume):
-            return c * volume * (math.pow(max_volume, d) - math.pow(volume, d)) * dt
+            safe_volume = max(volume, 1e-6)
+            safe_max = max(max_volume, safe_volume)
+            return c * safe_volume * (math.pow(safe_max, d) - math.pow(safe_volume, d)) * self.delta_t
         return self.solver(model)
 
-    def allee(self, startvol, n, dt, c, min_volume, max_volume):
+    def allee(self, c, min_volume, max_volume):
         def model(volume):
-            return c * (volume - min_volume) * (max_volume - volume) * dt
+            return c * (volume - min_volume) * (max_volume - volume) * self.delta_t
         return self.solver(model)
     
-    def lineair_gelimiteerd(self, startvol, n, dt, c, d):
+    def lineair_gelimiteerd(self, c, d):
         def model(volume):
-            return c * (volume / (volume + d)) * dt
+            return c * (volume / (volume + d)) * self.delta_t
         return self.solver(model)
 
-    def oppervlakte_gelimiteerd(self, startvol, n, dt, c, d):
+    def oppervlakte_gelimiteerd(self, c, d):
         def model(volume):
-            return c * ((volume + d) / 3) * dt
+            return c * ((volume + d) / 3) * self.delta_t
         return self.solver(model)
 
-    def von_bertalanffy(self, startvol, n, dt, c, d):
+    def von_bertalanffy(self, c, d):
         def model(volume):
-            return (c * math.pow(volume, 2/3) - d * volume) * dt
+            safe_volume = max(volume, 0)
+            return (c * math.pow(safe_volume, 2/3) - d * volume) * self.delta_t
         return self.solver(model)
 
-    def gompertz(self, startvol, n, dt, c, volume_max):
+    def gompertz(self, c, volume_max):
         def model(volume):
+            if volume <= 0:
+                volume = 1e-6
             log_calc = math.log((volume_max / volume))
-            result = c * volume * log_calc * dt
+            result = c * volume * log_calc * self.delta_t
             return result
         return self.solver(model)
     
@@ -178,7 +182,11 @@ class ode_solver:
                 attempts = 0
 
 
-        return params
+        return params, mse
+    
+    def aic(self, mse, n, k):
+        aic_waarde = n * math.log(mse) + 2 * k
+        return aic_waarde
  
     def plot(self, dagen, volumes, label):
         plt.plot(dagen, volumes, label = label)
