@@ -59,6 +59,18 @@ In het bestand `ode_demo.ipynb` is een uitgebreide handleiding te vinden van hoe
 
 ## Runge-Kutta:
 
+Runge-Kuttamehoden zijn numerieke methoden om differentiaal vergelijkingen op te lossen. Voor dit project hebben wij de klassieke Runge-Kuttamethode gebruikt. Deze lost de differentiaal vergelijking met 4 tussenstappen op:
+
+- Eerst wordt er een halve stap genomen
+- Daarna wordt er nog een halve stap genomen
+- Gevolgd door een hele stap
+- En tot slot nog een hele stap
+- De helling van deze verschillende stappen wordt samengenomen, hierbij weegt de eerste stap 1/6, de tweede stap 1/3, de derde stap 1/3 en de laatste stap 1/6
+
+Op deze manier wordt de meeste accurate helling berekent voor het specifieke punt waarop het model zich bevind, dit gaat zo door tot het laatste punt is bereikt.
+
+(Wikipedia-bijdragers, 2023)
+
 ## Modellen:
 
 Wiskundige modellen, waaronder ordinary differential equations (ODEs), worden gebruikt om tumor groei te simuleren en behandeling van kanker te bestuderen (Chan et al., 2023). Er zijn verschillende differentiaal vergelijkingen die hiervoor gebruikt kunnen worden. Verderop volgt een kort overzicht van een aantal verschillende differentiaal vergelijkingen die gebruikt kunnen worden om tumor groei te simuleren.
@@ -158,3 +170,4 @@ $$
 - Chan, K., Kao, C., Gordinier, J., & Ganden, K. (2023). Treatment Optimization for Tumor Growth by Ordinary Differential Equations. Journal Of Student Research, 12(4). https://doi.org/10.47611/jsrhs.v12i4.5202
 - Hassan, S. S., & Al-Saedi, H. M. (2024). Comparative Study of Tumor Growth Based on Single Species Models. BIO Web Of Conferences, 97, 00118. https://doi.org/10.1051/bioconf/20249700118
 - Rodrigues, J. A. (2024). Using Physics-Informed Neural Networks (PINNs) for Tumor Cell Growth Modeling. Mathematics, 12(8), 1195. https://doi.org/10.3390/math12081195
+- Wikipedia-bijdragers. (2023, 19 december). Runge-Kuttamethode. Wikipedia. https://nl.wikipedia.org/wiki/Runge-Kuttamethode
