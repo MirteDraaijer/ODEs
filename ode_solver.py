@@ -211,6 +211,10 @@ class ode_solver:
     def aic(self, mse, n, k):
         aic_waarde = n * math.log(mse) + 2 * k
         return aic_waarde
+    
+    def bic(self,mse,n,k):
+        result = n * math.log(mse) + math.log(n) * k
+        return result
  
     def plot(self, dagen, volumes, label):
         plt.plot(dagen, volumes, label = label)
