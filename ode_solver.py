@@ -52,15 +52,15 @@ class ode_solver:
     #     return dagen, volumes
     # Runge-Kutta is beter, die proberen te gebruiken
 
-    def lineair(self, c, volume):
-        def model(y):
-            return y + c
-        return self.runge_kutta_solver(model, volume)
+    def lineair(self, c):
+        def model(volume):
+            return volume + c
+        return self.runge_kutta_solver(model)
 
-    def exponentieel_toenemend(self, c, volume):
-        def model(y):
-            return c * y
-        return self.runge_kutta_solver(model, volume)
+    def exponentieel_toenemend(self, c):
+        def model(volume):
+            return c * volume
+        return self.runge_kutta_solver(model)
 
     # @DeprecationWarning
     # def mendelsohn_testmodel(self,c):
@@ -81,62 +81,60 @@ class ode_solver:
 
     #     return dagen,volumes
 
-    def mendelsohn(self, c, d, volume):
-        def model(y):
-            return c * math.pow(y, d)
-        return self.runge_kutta_solver(model, volume)
+    def mendelsohn(self, c, d):
+        def model(volume):
+            volume = max(volume, 1e-12)
+            volume = min(volume, 1e150)
+            return c * (volume ** d)
+        return self.runge_kutta_solver(model)
 
-    def exponentieel_afvlakkend(self, c, max_volume, volume):
-        def model(y):
-            return c * (max_volume - y)
-        return self.runge_kutta_solver(model, volume)
+    def exponentieel_afvlakkend(self, c, max_volume):
+        def model(volume):
+            return c * (max_volume - volume)
+        return self.runge_kutta_solver(model)
         
-    def logistisch(self, c, max_volume, volume):
-        def model(y):
-            return c * y * (max_volume - y)
+    def logistisch(self, c, max_volume):
+        def model(volume):
+            return c * volume * (max_volume - volume)
 
-        return self.runge_kutta_solver(model, volume)
+        return self.runge_kutta_solver(model)
 
-    def montroll(self, c, d, max_volume, volume):
-        def model(y):
-            safe_volume = max(y, 1e-6)
+    def montroll(self, c, d, max_volume):
+        def model(volume):
+            safe_volume = max(volume, 1e-6)
             safe_max = max(max_volume, safe_volume)
             return c * safe_volume * (math.pow(safe_max, d) - math.pow(safe_volume, d))
-        return self.runge_kutta_solver(model, volume)
+        return self.runge_kutta_solver(model)
 
-    def allee(self, c, min_volume, max_volume, volume):
-        def model(y):
-            return c * (y - min_volume) * (max_volume - y)
-        return self.runge_kutta_solver(model, volume)
+    def allee(self, c, min_volume, max_volume):
+        def model(volume):
+            return c * (volume - min_volume) * (max_volume - volume)
+        return self.runge_kutta_solver(model)
     
-    def lineair_gelimiteerd(self, c, d, volume):
-        def model(y):
-            return c * (y / (y + d))
-        return self.runge_kutta_solver(model, volume)
+    def lineair_gelimiteerd(self, c, d):
+        def model(volume):
+            return c * (volume / (volume + d))
+        return self.runge_kutta_solver(model)
 
-    def oppervlakte_gelimiteerd(self, c, d, volume):
-        def model(y):
-            return c * ((y + d) / 3)
-        return self.runge_kutta_solver(model, volume)
+    def oppervlakte_gelimiteerd(self, c, d):
+        def model(volume):
+            return c * ((volume + d) / 3)
+        return self.runge_kutta_solver(model)
 
-    def von_bertalanffy(self, c, d, volume):
-        def model(y):
-            safe_volume = max(y, 0)
-            return (c * math.pow(safe_volume, 2/3) - d * y)
-        return self.runge_kutta_solver(model, volume)
+    def von_bertalanffy(self, c, d):
+        def model(volume):
+            safe_volume = max(volume, 0)
+            return (c * math.pow(safe_volume, 2/3) - d * volume)
+        return self.runge_kutta_solver(model)
 
-    def gompertz(self, c, volume_max, volume):
-        def model(y):
-            if y <= 0:
-                y = 1e-6
-            log_calc = math.log((volume_max / y))
-            result = c * y * log_calc
-            return result
-        return self.runge_kutta_solver(model, volume)
+    def gompertz(self, c, volume_max):
+        volume_max = max(volume_max, 1e-12)
+        model = lambda v: c * v * math.log(volume_max / v) if v > 1e-6 else 0
+        return self.runge_kutta_solver(model)
 
-    def runge_kutta_solver(self, model, volume):
+    def runge_kutta_solver(self, model):
         t = 0.0
-        y = volume
+        y = self.volume
         dagen = [t]
         volumes = [y]
 
@@ -148,7 +146,7 @@ class ode_solver:
             y2 = y + 0.5 * dydt2 * self.delta_t
 
             dydt3 = model(y2)
-            y3 = y + dydt2 * self.delta_t
+            y3 = y + dydt3 * self.delta_t
 
             dydt4 = model(y3)
             t = t + self.delta_t
@@ -198,9 +196,9 @@ class ode_solver:
         
         mse = MSE_calc(echte_volumes, **params)
         attempts = 0
-        while attempts < 10000:
+        while attempts < 1000:
             attempts += 1
-            new_params = {key: val + random.gauss(sigma=0.1) for key , val in params.items()}
+            new_params = {key: val + random.gauss(0, 0.01) for key , val in params.items()}
             new_mse = MSE_calc(echte_volumes,**new_params)
             if new_mse<mse:
                 params = new_params
