@@ -46,16 +46,62 @@ De modellen:
 Voor verdere informatie over deze modellen lees [Achtergrondinformatie - Modellen](#modellen)
 
 # Systeem vereisten:
+Python 3.12 of hoger
+Math
+Matplotlib 3.10 of hoger
+
 
 # Gebruik:
 
 ## Gedetailleerde handleiding:
 
-In het bestand `ode_demo.ipynb` is een uitgebreide handleiding te vinden van hoe deze module in zijn werk gaat aan de hand van een voorbeeld.
+In het bestand `ode_demo.ipynb` is een uitgebreide handleiding te vinden van hoe deze module in zijn werk gaat aan de hand van een voorbeeld.  
+
+Hieronder een kort voorbeeld voor het initilizeren van de klasse en het uitvoeren van de montroll ode methode.  
+De initialisatie van de class moet te minste een start volume, n(datapunten) en een delta t   
+``
+model = ode_solver(start_volume, number_of_data_points, delta_t)
+``
+
+verder verwachten alle vergelijkingen een dictionary met daarin de parameters die voor dat specifieke model nodig zijn in dit geval c,d en max volume.  
+``
+parameters = {"c" : 5, "d" : 1, "max_volume":1000}
+``
+
+Voorbeeld uitvoeren met de montroll methode
+``
+voorspelde_dagen, voorspelde_volumes = model.montroll(**params)
+``
+
+
 
 # Achtergrondinformatie:
 
-## Information criterion:
+## Information criterion:  
+Om de modelen met elkaar te vergelijken zijn er 2 methodes geimplementeerd de Bayesian information criterion(BIC) en de Akaike information critirion(AIC). Deze methodes houden rekening met de potentie van een model om te overfitten door een foutmarge aan de hoeveelheid parameters toe te voegen.
+Het grootste verschil tussen de 2 methodes is dat BIC de hoeveelheid datapunten zwaarder weegt dan AIC.  
+
+Bij het vergelijken van 2 modelen met dezelfde methode h
+
+### BIC  
+De formule van BIC is alsvolgt  
+
+$$
+BCE = n \cdot ln(MSE) + ln(n) \cdot k  
+$$
+
+De n staat voor de hoeveelheid datapunten.  
+De MSE staat voor Mean Squared Error.  
+De k staat voor de hoeveelheid parameters.  
+
+### AIC  
+
+$$
+AIC = n \cdot ln(MSE) + 2 \cdot k  
+$$
+De n staat voor de hoeveelheid datapunten.  
+De MSE staat voor Mean Squared Error.  
+De k staat voor de hoeveelheid parameters.  
 
 ## Runge-Kutta:
 
@@ -82,7 +128,8 @@ $$
 \frac{\text{d}V}{\text{d}t} = c
 $$
 
-In het liniare model is word de volume $V$ bepaald door de groeifactor $c$ over tijd.
+In het liniare model is word de volume $V$ bepaald door de groeifactor $c$ over tijd zonder limiet.
+hierin word volume berekent als functie van tijd aan de hand van de volume + de groeifactor
 
 ### Exponentieel toenemende groei:
 De formule voor de exponentieel toenemende groei is:
@@ -100,6 +147,7 @@ $$
 \frac{\text{d}V}{\text{d}t} = c \cdot V^d
 $$
 
+Dit model gaat uit van een exponentiele groei van de groefactor C * volume tot de macht van factor D [1]
 
 ### Exponentieel afvlakkende groei:
 De formule voor exponentieel afvlakkende groei is:
@@ -117,6 +165,8 @@ $$
 \frac{\text{d}V}{\text{d}t} = c \cdot V \cdot \left( V_\max - V \right)
 $$
 
+De logistische groei model gaat uit van een sigmoidale curve waarbij de groei afvlakt aan de hand van het maximale volume
+
 ### Montroll groei:
 De formule voor Montroll groei is:
 
@@ -132,6 +182,8 @@ De formule voor Allee effect groei is:
 $$
 \frac{\text{d}V}{\text{d}t} = c \cdot \left( V - V_\min \right) \cdot \left( V_\max - V \right)
 $$
+
+Het allee effect neemt de omgeving en de volume van een tumor mee met de groeifactor (zowel positief als negatief)[2]
 
 ### Lineair gelimiteerde groei:
 De formule voor lineair gelimiteerde groei is:
@@ -149,6 +201,7 @@ $$
 \frac{\text{d}V}{\text{d}t} = c \cdot \frac{V}{\left( V + d \right)^\frac{1}{3}}
 $$
 
+Dit model gaat er vanuit dat voornamenlijk de bovenste laag van een tumor groeit en de cellen binnenin de tumor niet meer. Dit model gaat uit van een exponentiele groei in het beginstadium en daarna uitgaat van de groei factor van de bovenste laag. [1]
 
 ### Von Bertalanffy groei:
 De formule voor Von Bertalanffy groei is:
@@ -166,8 +219,13 @@ $$
 \frac{\text{d}V}{\text{d}t} = c \cdot V \cdot \ln \left( \frac{V_\max}{V} \right)
 $$
 
+Gompertz gaat uit van een sigmoidal curve die asymetrisch is van het infectiepunt. Dit model is een generalisatie van een logistiek model dat de groei van organisme's nabootst.[1]
+hierbij komt de variable Vmax te staan voor het maximale volume dat de tumor theoretisch kan berijken.
+
 # Bronvermelding:
 - Chan, K., Kao, C., Gordinier, J., & Ganden, K. (2023). Treatment Optimization for Tumor Growth by Ordinary Differential Equations. Journal Of Student Research, 12(4). https://doi.org/10.47611/jsrhs.v12i4.5202
 - Hassan, S. S., & Al-Saedi, H. M. (2024). Comparative Study of Tumor Growth Based on Single Species Models. BIO Web Of Conferences, 97, 00118. https://doi.org/10.1051/bioconf/20249700118
 - Rodrigues, J. A. (2024). Using Physics-Informed Neural Networks (PINNs) for Tumor Cell Growth Modeling. Mathematics, 12(8), 1195. https://doi.org/10.3390/math12081195
 - Wikipedia-bijdragers. (2023, 19 december). Runge-Kuttamethode. Wikipedia. https://nl.wikipedia.org/wiki/Runge-Kuttamethode
+- [1] https://link.springer.com/article/10.1186/s12885-016-2164-x
+- [2] https://zakopane.if.uj.edu.pl/event/24/contributions/591/contribution.pdf
