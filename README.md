@@ -46,9 +46,9 @@ De modellen:
 Voor verdere informatie over deze modellen lees [Achtergrondinformatie - Modellen](#modellen)
 
 # Systeem vereisten:
-Python 3.12 of hoger
-Math
-Matplotlib 3.10 of hoger
+Python 3.12 of hoger  
+Math  
+Matplotlib 3.10 of hoger  
 
 
 # Gebruik:
@@ -96,9 +96,10 @@ De k staat voor de hoeveelheid parameters.
 
 ### AIC  
 
-$$
+$$  
 AIC = n \cdot ln(MSE) + 2 \cdot k  
-$$
+$$  
+
 De n staat voor de hoeveelheid datapunten.  
 De MSE staat voor Mean Squared Error.  
 De k staat voor de hoeveelheid parameters.  
