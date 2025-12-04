@@ -81,7 +81,7 @@ voorspelde_dagen, voorspelde_volumes = model.montroll(**params)
 Om de modelen met elkaar te vergelijken zijn er 2 methodes geimplementeerd de Bayesian information criterion(BIC) en de Akaike information critirion(AIC). Deze methodes houden rekening met de potentie van een model om te overfitten door een foutmarge aan de hoeveelheid parameters toe te voegen.
 Het grootste verschil tussen de 2 methodes is dat BIC de hoeveelheid datapunten zwaarder weegt dan AIC.  
 
-Bij het vergelijken van 2 modelen met dezelfde methode h
+Bij het vergelijken van 2 modelen met dezelfde methode heeft het model met de laagste waarde de voorkeur.
 
 ### BIC  
 De formule van BIC is alsvolgt  
